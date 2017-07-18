@@ -1,0 +1,85 @@
+{% block body %}
+ 
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+       <!--Table and divs that hold the pie charts-->
+    <div>
+    {% include "output.html" %} 
+	</div></br></br>
+
+    <table class="table">
+      <tr>
+        <td><div id="linechart_div" style="border: 1px solid #ccc"></div></td>
+        <td><div id="barchart_div" style="border: 1px solid #ccc"></div></td>
+      </tr>
+      <tr>
+        <td><div id="bubblechart_div" style="border: 1px solid #ccc"></div></td>
+        <td><div id="scatterchart_div" style="border: 1px solid #ccc"></div></td>
+      </tr>
+    </table>
+ 
+<script type='text/javascript'>
+// Load Charts and the corechart and barchart packages.
+google.charts.load('current', {'packages':['corechart']});
+
+      // Draw the pie chart and bar chart when Charts is loaded.
+google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+	var data = google.visualization.arrayToDataTable([
+        ['Currency', 'Rate', { role: 'style' }],
+        ['USD', {{rates[0]}}, 'gold'],
+        ['GBP', {{rates[1]}}, 'silver'],
+        ['HKD', {{rates[2]}}, 'brown'],
+        ['AUD', {{rates[3]}}, 'blue']
+      ]);
+
+
+    var data2 = google.visualization.arrayToDataTable([
+    	['ID', 'X', 'Y', 'Temperature'],
+    	['',   79,  136,      130],
+        ['',   80,  167,      120],
+		['',   72,  170,      100],
+        ['',   78,  184,      50],
+        ['',   81,  200,      210],
+        ['',   72,  278,      230],
+        ['',   68,  477,      80]
+        ]);
+
+ 	var view1 = new google.visualization.DataView(data2);
+    view1.setColumns([1, 2]);
+
+    var view2 = new google.visualization.DataView(data2);
+    view2.setColumns([2, 1,3]);
+
+    // var piechart_options = {title:'Pie Chart:', width:400, height:300};
+    // var piechart = new google.visualization.PieChart(document.getElementById('piechart_div'));
+    // piechart.draw(data, piechart_options);
+
+    // var barchart_options = {title:'Barchart: How Much Pizza I Ate Last Night', width:400, height:300, legend: 'none', bar: { groupWidth: "90%" }};
+    var barchart_options = {width: 400, height:300, title: 'Barchart', legend: 'none'}
+ 
+    var barchart = new google.visualization.ColumnChart(document.getElementById('barchart_div'));
+    barchart.draw(data, barchart_options);
+
+    var bubble_options = {title:'Bubblechart: ', width:400, height:300, legend: 'none',colorAxis: {colors: ['yellow', 'red']}};
+    var bubblechart = new google.visualization.BubbleChart(document.getElementById('bubblechart_div'));
+    bubblechart.draw(data2, bubble_options);
+
+    var scatterchart_options = {width: 400, height:300, title: 'Scatterchart', legend: 'none'}
+    var scatterchart = new google.visualization.ScatterChart(document.getElementById('scatterchart_div'));
+
+    scatterchart.draw(view1, scatterchart_options);
+
+    var multilinechart_options = {width: 400, height:300, title: 'MultiLinechart', legend: 'none', crosshair: {
+          color: '#000',
+          trigger: 'selection'
+        }}
+    var multilinechart = new google.visualization.LineChart(document.getElementById('linechart_div'));
+
+    multilinechart.draw(view2, multilinechart_options);
+    multilinechart.setSelection([{row: 5, column: 1}]);
+}
+</script> 
+{% endblock %}
+
+

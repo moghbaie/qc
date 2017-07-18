@@ -1,0 +1,40 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>QC Report</title>
+	<script type="text/javascript">
+		var data = '{"info": {"level": "h1", "header": "Instrument information", "data": [{"header": "msManufacturer ", "value": "Thermo Finnigan", "level": "b"}, {"header": "msModel ", "value": "unknown", "level": "b"}, {"header": "msIonisation ", "value": "NSI", "level": "b"}, {"header": "msMassAnalyzer ", "value": "FTMS", "level": "b"}, {"header": "msDetector ", "value": "unknown", "level": "b"}]}, "qc": {"header": "Quality control", "level": "h1", "data": {"id_based": {"header": "ID-based quality control", "level": "h2", "data": [{"header": "Peptides identified", "value": 933, "level": "b"}, {"header": "Missed cleavages", "value": 132, "level": "b"}]}}}}';
+
+		function parseJsonData(json, target) {
+			if(json.hasOwnProperty('data')){
+				for(json_i in json.data){
+					var level = json.data[json_i].level
+					document.getElementById(target).innerHTML += "<" + level + ">" + json.data[json_i].header + "</" + level + ">";
+					if(json.data[json_i].hasOwnProperty('value')){
+						 document.getElementById(target).innerHTML += ": " + json.data[json_i].value.toString() + "</br>";
+					}
+					if(json.data[json_i].hasOwnProperty('data')){
+						parseJsonData(json.data[json_i], target);
+					}
+				}
+			}
+		}
+
+		function fillData(data, target){
+			var json = JSON.parse(data);
+
+			for(parent in json){
+				document.getElementById(target).innerHTML += "<" + json[parent].level + ">" + json[parent].header + "</" + json[parent].level + ">";
+				parseJsonData(json[parent], target);
+			}
+		}
+
+	</script>
+</head>
+<body>
+	<div id = "main_div"></div>
+	<script type="text/javascript">
+		fillData(data, "main_div");
+	</script>
+</body>
+</html>
